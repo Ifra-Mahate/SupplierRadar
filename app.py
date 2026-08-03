@@ -1,0 +1,71 @@
+from flask import Flask, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///supplierradar.db'
+app.config['SECRET_KEY'] = 'supplierradar2024'
+db = SQLAlchemy(app)
+
+class Supplier(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    country = db.Column(db.String(50))
+    category = db.Column(db.String(50))
+    city = db.Column(db.String(50))
+    spend_percent = db.Column(db.Float)
+
+class RiskScore(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'))
+    risk_score = db.Column(db.Float)
+    risk_level = db.Column(db.String(20))
+
+class Alert(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'))
+    message = db.Column(db.Text)
+    alert_level = db.Column(db.String(20))
+    is_read = db.Column(db.Boolean, default=False)
+
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "SupplierRadar Backend Running!",
+        "status": "success"
+    })
+
+@app.route('/api/suppliers')
+def get_suppliers():
+    suppliers = Supplier.query.all()
+    result = []
+    for s in suppliers:
+        result.append({
+            "id": s.id,
+            "name": s.name,
+            "country": s.country,
+            "category": s.category,
+            "city": s.city,
+            "spend_percent": s.spend_percent
+        })
+    return jsonify(result)
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+        if Supplier.query.count() == 0:
+            suppliers = [
+                Supplier(name="Vietnam Plastics Co", country="Vietnam", category="Plastic Parts", city="Ho Chi Minh City", spend_percent=30.0),
+                Supplier(name="Taiwan Chip Corp", country="Taiwan", category="Semiconductors", city="Taipei", spend_percent=25.0),
+                Supplier(name="China Steel Ltd", country="China", category="Steel", city="Shanghai", spend_percent=20.0),
+                Supplier(name="Bangladesh Textile", country="Bangladesh", category="Fabric", city="Dhaka", spend_percent=15.0),
+                Supplier(name="Malaysia Rubber Corp", country="Malaysia", category="Rubber Parts", city="Kuala Lumpur", spend_percent=10.0),
+            ]
+            db.session.add_all(suppliers)
+            db.session.commit()
+            print("5 suppliers added!")
+        else:
+            print("Suppliers already exist!")
+    app.run(debug=True)
