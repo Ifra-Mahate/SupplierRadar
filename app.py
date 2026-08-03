@@ -51,7 +51,58 @@ def get_suppliers():
             "spend_percent": s.spend_percent
         })
     return jsonify(result)
-
+@app.route('/api/risk-scores')
+def get_risk_scores():
+    suppliers = Supplier.query.all()
+    result = []
+    for s in suppliers:
+        # Abhi fake risk score generate karo
+        import random
+        risk_score = random.randint(0, 100)
+        
+        if risk_score > 70:
+            risk_level = "High"
+        elif risk_score >= 40:
+            risk_level = "Medium"
+        else:
+            risk_level = "Low"
+            
+        result.append({
+            "supplier_id": s.id,
+            "supplier_name": s.name,
+            "country": s.country,
+            "risk_score": risk_score,
+            "risk_level": risk_level
+        })
+    return jsonify(result)
+@app.route('/api/alerts')
+def get_alerts():
+    suppliers = Supplier.query.all()
+    alerts = []
+    for s in suppliers:
+        import random
+        risk_score = random.randint(0, 100)
+        
+        if risk_score > 70:
+            alerts.append({
+                "supplier_name": s.name,
+                "country": s.country,
+                "risk_score": risk_score,
+                "alert_level": "High",
+                "message": f"{s.name} is at HIGH RISK! Immediate action required.",
+                "is_read": False
+            })
+        elif risk_score >= 40:
+            alerts.append({
+                "supplier_name": s.name,
+                "country": s.country,
+                "risk_score": risk_score,
+                "alert_level": "Medium",
+                "message": f"{s.name} is at MEDIUM RISK. Monitor closely.",
+                "is_read": False
+            })
+    
+    return jsonify(alerts)
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
