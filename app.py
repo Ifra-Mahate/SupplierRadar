@@ -202,15 +202,30 @@ if __name__ == '__main__':
         db.create_all()
         if Supplier.query.count() == 0:
             suppliers = [
-                Supplier(name="Vietnam Plastics Co", country="Vietnam", category="Plastic Parts", city="Ho Chi Minh City", spend_percent=30.0),
-                Supplier(name="Taiwan Chip Corp", country="Taiwan", category="Semiconductors", city="Taipei", spend_percent=25.0),
-                Supplier(name="China Steel Ltd", country="China", category="Steel", city="Shanghai", spend_percent=20.0),
-                Supplier(name="Bangladesh Textile", country="Bangladesh", category="Fabric", city="Dhaka", spend_percent=15.0),
-                Supplier(name="Malaysia Rubber Corp", country="Malaysia", category="Rubber Parts", city="Kuala Lumpur", spend_percent=10.0),
+                Supplier(name="Vietnam Plastics Co", country="Vietnam", category="Plastic Parts", city="Ho Chi Minh City", spend_percent=8.0),
+                Supplier(name="Taiwan Chip Corp", country="Taiwan", category="Semiconductors", city="Taipei", spend_percent=7.0),
+                Supplier(name="China Steel Ltd", country="China", category="Steel", city="Shanghai", spend_percent=6.0),
+                Supplier(name="Bangladesh Textile", country="Bangladesh", category="Fabric", city="Dhaka", spend_percent=5.0),
+                Supplier(name="Malaysia Rubber Corp", country="Malaysia", category="Rubber Parts", city="Kuala Lumpur", spend_percent=5.0),
+                Supplier(name="India Auto Parts Ltd", country="India", category="Auto Components", city="Pune", spend_percent=6.0),
+                Supplier(name="South Korea Battery", country="South Korea", category="Batteries", city="Seoul", spend_percent=7.0),
+                Supplier(name="Japan Camera Module", country="Japan", category="Camera Parts", city="Tokyo", spend_percent=5.0),
+                Supplier(name="Thailand Electronics", country="Thailand", category="Circuit Boards", city="Bangkok", spend_percent=4.0),
+                Supplier(name="Indonesia Textiles", country="Indonesia", category="Fabric", city="Jakarta", spend_percent=4.0),
+                Supplier(name="Germany Machinery Co", country="Germany", category="Industrial Machines", city="Munich", spend_percent=5.0),
+                Supplier(name="Italy Leather Goods", country="Italy", category="Leather", city="Milan", spend_percent=3.0),
+                Supplier(name="Poland Auto Parts", country="Poland", category="Auto Components", city="Warsaw", spend_percent=4.0),
+                Supplier(name="France Chemicals Ltd", country="France", category="Chemicals", city="Paris", spend_percent=3.0),
+                Supplier(name="UAE Logistics Corp", country="UAE", category="Logistics", city="Dubai", spend_percent=4.0),
+                Supplier(name="Turkey Steel Works", country="Turkey", category="Steel", city="Istanbul", spend_percent=3.0),
+                Supplier(name="Mexico Auto Corp", country="Mexico", category="Auto Components", city="Mexico City", spend_percent=5.0),
+                Supplier(name="Brazil Steel Ltd", country="Brazil", category="Steel", city="Sao Paulo", spend_percent=4.0),
+                Supplier(name="USA Tech Components", country="USA", category="Semiconductors", city="San Jose", spend_percent=6.0),
+                Supplier(name="South Africa Mining", country="South Africa", category="Raw Materials", city="Johannesburg", spend_percent=3.0),
             ]
             db.session.add_all(suppliers)
             db.session.commit()
-            print("5 suppliers added!")
+            print("20 suppliers added!")
         else:
             print("Suppliers already exist!")
     app.run(debug=True)
