@@ -160,7 +160,43 @@ def get_alternatives(id):
                 "risk_level": "Low"
             })
     return jsonify(alternatives[:3])
+@app.route('/api/supplier-email/<int:id>')
+def generate_supplier_email(id):
+    supplier = Supplier.query.get(id)
+    
+    if not supplier:
+        return jsonify({
+            "error": "Supplier not found"
+        }), 404
+    
+    email = f"""Dear {supplier.name} Team,
 
+We are conducting our regular 
+supply chain health assessment.
+
+We have noticed some regional 
+developments near {supplier.city}, 
+{supplier.country} including:
+- Weather patterns in your region
+- Regional logistics updates
+
+Could you please confirm:
+1. Current production capacity
+2. Expected delivery status  
+3. Any operational challenges
+
+We value our partnership and 
+want to ensure smooth operations.
+
+Best regards,
+Supply Chain Team"""
+    
+    return jsonify({
+        "supplier_name": supplier.name,
+        "supplier_country": supplier.country,
+        "supplier_city": supplier.city,
+        "email_draft": email
+    })
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
