@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import random
 
 app = Flask(__name__)
 CORS(app)
@@ -51,22 +52,58 @@ def get_suppliers():
             "spend_percent": s.spend_percent
         })
     return jsonify(result)
+
+@app.route('/api/suppliers/<int:id>')
+def get_supplier(id):
+    supplier = Supplier.query.get(id)
+    if not supplier:
+        return jsonify({
+            "error": "Supplier not found"
+        }), 404
+    risk_score = random.randint(0, 100)
+    if risk_score > 70:
+        risk_level = "High"
+        reasons = [
+            "Negative news detected in region",
+            "Port congestion above normal",
+            "Trade volume dropped 25%"
+        ]
+    elif risk_score >= 40:
+        risk_level = "Medium"
+        reasons = [
+            "Weather warning in supplier region",
+            "Minor delays reported"
+        ]
+    else:
+        risk_level = "Low"
+        reasons = [
+            "No major risks detected",
+            "Normal operations"
+        ]
+    return jsonify({
+        "id": supplier.id,
+        "name": supplier.name,
+        "country": supplier.country,
+        "category": supplier.category,
+        "city": supplier.city,
+        "spend_percent": supplier.spend_percent,
+        "risk_score": risk_score,
+        "risk_level": risk_level,
+        "reasons": reasons
+    })
+
 @app.route('/api/risk-scores')
 def get_risk_scores():
     suppliers = Supplier.query.all()
     result = []
     for s in suppliers:
-        # Abhi fake risk score generate karo
-        import random
         risk_score = random.randint(0, 100)
-        
         if risk_score > 70:
             risk_level = "High"
         elif risk_score >= 40:
             risk_level = "Medium"
         else:
             risk_level = "Low"
-            
         result.append({
             "supplier_id": s.id,
             "supplier_name": s.name,
@@ -75,14 +112,13 @@ def get_risk_scores():
             "risk_level": risk_level
         })
     return jsonify(result)
+
 @app.route('/api/alerts')
 def get_alerts():
     suppliers = Supplier.query.all()
     alerts = []
     for s in suppliers:
-        import random
         risk_score = random.randint(0, 100)
-        
         if risk_score > 70:
             alerts.append({
                 "supplier_name": s.name,
@@ -101,8 +137,30 @@ def get_alerts():
                 "message": f"{s.name} is at MEDIUM RISK. Monitor closely.",
                 "is_read": False
             })
-    
     return jsonify(alerts)
+
+@app.route('/api/alternatives/<int:id>')
+def get_alternatives(id):
+    supplier = Supplier.query.get(id)
+    if not supplier:
+        return jsonify({
+            "error": "Supplier not found"
+        }), 404
+    all_suppliers = Supplier.query.all()
+    alternatives = []
+    for s in all_suppliers:
+        if s.id != supplier.id and s.country != supplier.country:
+            risk_score = random.randint(0, 40)
+            alternatives.append({
+                "id": s.id,
+                "name": s.name,
+                "country": s.country,
+                "category": s.category,
+                "risk_score": risk_score,
+                "risk_level": "Low"
+            })
+    return jsonify(alternatives[:3])
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
