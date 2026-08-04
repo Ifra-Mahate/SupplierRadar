@@ -277,7 +277,42 @@ def get_statistics():
             "low": round(low/total*100, 1)
         }
     })
+@app.route('/api/suppliers', methods=['POST'])
+def add_supplier():
+    data = request.json
+    
+    new_supplier = Supplier(
+        name=data['name'],
+        country=data['country'],
+        category=data['category'],
+        city=data['city'],
+        spend_percent=data['spend_percent']
+    )
+    
+    db.session.add(new_supplier)
+    db.session.commit()
+    
+    return jsonify({
+        "message": "Supplier added successfully!",
+        "id": new_supplier.id,
+        "name": new_supplier.name
+    })
 
+@app.route('/api/suppliers/<int:id>', methods=['DELETE'])
+def delete_supplier(id):
+    supplier = Supplier.query.get(id)
+    
+    if not supplier:
+        return jsonify({
+            "error": "Supplier not found"
+        }), 404
+    
+    db.session.delete(supplier)
+    db.session.commit()
+    
+    return jsonify({
+        "message": f"{supplier.name} deleted successfully!"
+    })
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
