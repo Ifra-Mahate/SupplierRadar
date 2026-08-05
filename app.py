@@ -313,6 +313,41 @@ def delete_supplier(id):
     return jsonify({
         "message": f"{supplier.name} deleted successfully!"
     })
+@app.route('/api/risk-history/<int:id>')
+def get_risk_history(id):
+    supplier = Supplier.query.get(id)
+    if not supplier:
+        return jsonify({
+            "error": "Supplier not found"
+        }), 404
+    
+    history = []
+    weeks = ["Week 1", "Week 2", "Week 3", 
+             "Week 4", "Week 5", "Week 6",
+             "Week 7", "Week 8", "Week 9",
+             "Week 10", "Week 11", "Week 12"]
+    
+    for i, week in enumerate(weeks):
+        random.seed(id * 7 + i)
+        score = random.randint(0, 100)
+        if score > 70:
+            level = "High"
+        elif score >= 40:
+            level = "Medium"
+        else:
+            level = "Low"
+        
+        history.append({
+            "week": week,
+            "risk_score": score,
+            "risk_level": level
+        })
+    
+    return jsonify({
+        "supplier_name": supplier.name,
+        "supplier_country": supplier.country,
+        "history": history
+    })
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
