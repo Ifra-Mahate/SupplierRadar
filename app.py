@@ -348,6 +348,88 @@ def get_risk_history(id):
         "supplier_country": supplier.country,
         "history": history
     })
+@app.route('/api/country-risk')
+def get_country_risk():
+    suppliers = Supplier.query.all()
+    country_data = {}
+    
+    for s in suppliers:
+        score, level = calculate_risk(s.id)
+        
+        if s.country not in country_data:
+            country_data[s.country] = {
+                "scores": [],
+                "suppliers": 0
+            }
+        
+        country_data[s.country]["scores"].append(score)
+        country_data[s.country]["suppliers"] += 1
+    
+    result = []
+    for country, data in country_data.items():
+        avg_score = sum(data["scores"]) / len(data["scores"])
+        
+        if avg_score > 70:
+            level = "High"
+        elif avg_score >= 40:
+            level = "Medium"
+        else:
+            level = "Low"
+        
+        result.append({
+            "country": country,
+            "avg_risk_score": round(avg_score, 1),
+            "risk_level": level,
+            "total_suppliers": data["suppliers"]
+        })
+    
+    result.sort(key=lambda x: x["avg_risk_score"], reverse=True)
+    
+    return jsonify(result)
+
+
+@app.route('/api/dashboard-summary')
+def get_dashboard_summary():
+    suppliers = Supplier.query.all()
+    
+    total = len(suppliers)
+    high = 0
+    medium = 0
+    low = 0
+    high_risk_suppliers = []
+    
+    for s in suppliers:
+        score, level = calculate_risk(s.id)
+        
+        if level == "High":
+            high += 1
+            high_risk_suppliers.append({
+                "name": s.name,
+                "country": s.country,
+                "risk_score": score
+            })
+        elif level == "Medium":
+            medium += 1
+        else:
+            low += 1
+    
+    high_risk_suppliers.sort(
+        key=lambda x: x["risk_score"], 
+        reverse=True
+    )
+    
+    return jsonify({
+        "total_suppliers": total,
+        "high_risk": high,
+        "medium_risk": medium,
+        "low_risk": low,
+        "high_risk_percentage": round(high/total*100, 1),
+        "medium_risk_percentage": round(medium/total*100, 1),
+        "low_risk_percentage": round(low/total*100, 1),
+        "top_high_risk_suppliers": high_risk_suppliers[:5],
+        "total_alerts": high + medium,
+        "system_status": "Active"
+    })
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
