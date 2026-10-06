@@ -105,4 +105,26 @@ def get_supplier_news(supplier: str):
         "sentiment_score": round(average_sentiment, 3),
 
         "articles": articles
-    }
+    } 
+def get_supplier_risk_score(supplier: str):
+    news_data = get_supplier_news(supplier)
+
+    negative_ratio = news_data["negative_ratio"]
+    risk_percentage = negative_ratio * 100
+
+    if risk_percentage <= 20:
+        risk_level = "Low"
+    elif risk_percentage <= 50:
+        risk_level = "Medium"
+    else:
+        risk_level = "High"
+
+    return {
+  "supplier": supplier,
+        "news_count": news_data["news_count"],
+        "negative_news": news_data["negative_news"],
+        "negative_ratio": news_data["negative_ratio"],
+        "sentiment_score": news_data["sentiment_score"],
+        "risk_percentage": round(risk_percentage, 2),
+        "risk_level": risk_level
+     }
