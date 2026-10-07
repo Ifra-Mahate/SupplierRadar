@@ -444,6 +444,39 @@ def get_dashboard_summary():
         "total_alerts": high + medium,
         "system_status": "Active"
     })
+@app.route('/api/predict', methods=['POST'])
+def predict():
+    data = request.json
+    
+    if ml_model is not None:
+        try:
+            features = [[
+                data.get('news_risk_score', 5),
+                data.get('weather_risk_score', 3),
+                data.get('sanctions_flag', 0),
+                data.get('avg_delivery_delay', 7),
+                data.get('financial_score', 60),
+                data.get('trade_volume_change', -10)
+            ]]
+            prediction = ml_model.predict(features)
+            risk_level = prediction[0]
+        except:
+            risk_level = "Medium"
+    else:
+        score = data.get('news_risk_score', 5)
+        if score > 7:
+            risk_level = "High"
+        elif score > 4:
+            risk_level = "Medium"
+        else:
+            risk_level = "Low"
+    
+    return jsonify({
+        "risk_level": risk_level,
+        "news_risk_score": data.get('news_risk_score'),
+        "weather_risk_score": data.get('weather_risk_score'),
+        "sanctions_flag": data.get('sanctions_flag')
+    })
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
