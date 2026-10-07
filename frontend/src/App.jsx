@@ -324,11 +324,28 @@ onRecommendations={() => {
             {/* LOGIN */}
             <button
   className="login-submit"
-  onClick={() => setShowDashboard(true)}
+  onClick={() => {
+    const email = document.querySelector(
+      'input[type="email"]'
+    )?.value
+
+    const password = document.querySelector(
+      'input[type="password"]'
+    )?.value
+
+    if (
+      email === 'admin@gmail.com' &&
+      password === 'admin123'
+    ) {
+      setShowDashboard(true)
+    } else {
+      alert('Invalid credentials! Use: admin@gmail.com / admin123')
+    }
+  }}
 >
-              <span>LOGIN TO PLATFORM</span>
-              <b>→</b>
-            </button>
+  LOGIN TO PLATFORM
+  <span>→</span>
+</button>
 
 
             {/* DIVIDER */}
