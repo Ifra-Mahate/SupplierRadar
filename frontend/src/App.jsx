@@ -1,20 +1,181 @@
 import { useState } from 'react'
 import './App.css'
 import Dashboard from './dashboard'
+import Suppliers from './Suppliers'
+import Alerts from './Alerts'
+import RiskAnalysis from './RiskAnalysis'
+import NetworkMap from './NetworkMap'
+import Recommendations from './Recommendations'
 
 function App() {
 
   const [showLogin, setShowLogin] = useState(false)
   const [showDashboard, setShowDashboard] = useState(false)
+  const [showSuppliers, setShowSuppliers] = useState(false)
+  const [showAlerts, setShowAlerts] = useState(false)
+  const [showRiskAnalysis, setShowRiskAnalysis] = useState(false)
+  const [showNetworkMap, setShowNetworkMap] = useState(false)
+  const [showRecommendations, setShowRecommendations] = useState(false)
 
-  if (showDashboard) {
+
+if (showSuppliers) {
   return (
-    <Dashboard
-      onLogout={() => {
-        setShowDashboard(false)
-        setShowLogin(false)
+    <Suppliers
+      onBack={() => {
+        setShowSuppliers(false)
+        setShowDashboard(true)
+      }}
+      onAlerts={() => {
+        setShowSuppliers(false)
+        setShowAlerts(true)
+      }}
+      onNetworkMap={() => {
+  setShowSuppliers(false)
+  setShowNetworkMap(true)
+}}
+onRecommendations={() => {
+  setShowSuppliers(false)
+  setShowRecommendations(true)
+}}
+    />
+  )
+}
+if (showAlerts) {
+  return (
+    <Alerts
+      onBack={() => {
+        setShowAlerts(false)
+        setShowDashboard(true)
+      }}
+      onSuppliers={() => {
+        setShowAlerts(false)
+        setShowSuppliers(true)
+      }}
+      onRiskAnalysis={() => {
+  setShowAlerts(false)
+  setShowRiskAnalysis(true)
+}}
+onNetworkMap={() => {
+  setShowAlerts(false)
+  setShowNetworkMap(true)
+}}
+onRecommendations={() => {
+  setShowAlerts(false)
+  setShowRecommendations(true)
+}}
+    />
+  )
+}
+if (showRiskAnalysis) {
+  return (
+    <RiskAnalysis
+      onBack={() => {
+        setShowRiskAnalysis(false)
+        setShowDashboard(true)
+      }}
+      onSuppliers={() => {
+        setShowRiskAnalysis(false)
+        setShowSuppliers(true)
+      }}
+      onAlerts={() => {
+        setShowRiskAnalysis(false)
+        setShowAlerts(true)
+      }}
+      onRiskAnalysis={() => {
+  setShowSuppliers(false)
+  setShowRiskAnalysis(true)
+}}
+onNetworkMap={() => {
+  setShowRiskAnalysis(false)
+  setShowNetworkMap(true)
+}}
+onRecommendations={() => {
+  setShowRiskAnalysis(false)
+  setShowRecommendations(true)
+}}
+    />
+  )
+}
+if (showNetworkMap) {
+  return (
+    <NetworkMap
+      onBack={() => {
+        setShowNetworkMap(false)
+        setShowDashboard(true)
+      }}
+      onSuppliers={() => {
+        setShowNetworkMap(false)
+        setShowSuppliers(true)
+      }}
+      onAlerts={() => {
+        setShowNetworkMap(false)
+        setShowAlerts(true)
+      }}
+      onRiskAnalysis={() => {
+        setShowNetworkMap(false)
+        setShowRiskAnalysis(true)
+      }}
+      onRecommendations={() => {
+  setShowNetworkMap(false)
+  setShowRecommendations(true)
+}}
+    />
+  )
+}
+if (showRecommendations) {
+  return (
+    <Recommendations
+      onBack={() => {
+        setShowRecommendations(false)
+        setShowDashboard(true)
+      }}
+      onSuppliers={() => {
+        setShowRecommendations(false)
+        setShowSuppliers(true)
+      }}
+      onAlerts={() => {
+        setShowRecommendations(false)
+        setShowAlerts(true)
+      }}
+      onRiskAnalysis={() => {
+        setShowRecommendations(false)
+        setShowRiskAnalysis(true)
+      }}
+      onNetworkMap={() => {
+        setShowRecommendations(false)
+        setShowNetworkMap(true)
       }}
     />
+  )
+}
+  if (showDashboard) {
+  return (
+  <Dashboard
+  onLogout={() => {
+    setShowDashboard(false)
+    setShowLogin(false)
+  }}
+  onSuppliers={() => {
+    setShowDashboard(false)
+    setShowSuppliers(true)
+  }}
+ onAlerts={() => {
+  setShowDashboard(false)
+  setShowAlerts(true)
+}}
+onRiskAnalysis={() => {
+  setShowDashboard(false)
+  setShowRiskAnalysis(true)
+}}
+onNetworkMap={() => {
+  setShowDashboard(false)
+  setShowNetworkMap(true)
+}}
+onRecommendations={() => {
+  setShowDashboard(false)
+  setShowRecommendations(true)
+}}
+/>
   )
 }
 

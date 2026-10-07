@@ -1,6 +1,13 @@
 import './App.css'
 
-function Dashboard({ onLogout }) {
+function Dashboard({
+  onLogout,
+  onSuppliers,
+  onAlerts,
+  onRiskAnalysis,
+  onNetworkMap,
+  onRecommendations
+}) {
   return (
     <div className="dashboard-page">
 
@@ -30,20 +37,28 @@ function Dashboard({ onLogout }) {
             Overview
           </button>
 
-          <button className="sidebar-link">
-            <span>◎</span>
-            Suppliers
-          </button>
+         <button
+  className="sidebar-link"
+  onClick={onSuppliers}
+>
+  <span>◎</span>
+  Suppliers
+</button>
+          <button
+  className="sidebar-link"
+  onClick={onAlerts}
+>
+  <span>⚠</span>
+  Alerts
+</button>
 
-          <button className="sidebar-link">
-            <span>⚠</span>
-            Alerts
-          </button>
-
-          <button className="sidebar-link">
-            <span>◌</span>
-            Risk Analysis
-          </button>
+         <button
+  className="sidebar-link"
+  onClick={onRiskAnalysis}
+>
+  <span>◌</span>
+  Risk Analysis
+</button>
 
         </div>
 
@@ -52,16 +67,21 @@ function Dashboard({ onLogout }) {
 
           <p>INTELLIGENCE</p>
 
-          <button className="sidebar-link">
-            <span>◉</span>
-            Network Map
-          </button>
+         <button
+  className="sidebar-link"
+  onClick={onNetworkMap}
+>
+  <span>◉</span>
+  Network Map
+</button>
 
-          <button className="sidebar-link">
-            <span>✦</span>
-            Recommendations
-          </button>
-
+          <button
+  className="sidebar-link"
+  onClick={onRecommendations}
+>
+  <span>✦</span>
+  Recommendations
+</button>
         </div>
 
 
