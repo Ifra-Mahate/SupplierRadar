@@ -2,6 +2,20 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
+import pickle
+import os
+
+model_path = os.path.join('ml', 'supplier_risk_model.pkl')
+try:
+    with open(model_path, 'rb') as f:
+        ml_model = pickle.load(f)
+    print("ML Model loaded!")
+except:
+    ml_model = None
+    print("ML Model not found - using default scoring")
+else:
+    ml_model = None
+    print("ML Model not found!")
 
 app = Flask(__name__)
 CORS(app)
