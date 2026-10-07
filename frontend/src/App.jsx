@@ -29,6 +29,10 @@ if (showSuppliers) {
         setShowSuppliers(false)
         setShowAlerts(true)
       }}
+      onRiskAnalysis={() => {
+  setShowSuppliers(false)
+  setShowRiskAnalysis(true)
+}}
       onNetworkMap={() => {
   setShowSuppliers(false)
   setShowNetworkMap(true)
