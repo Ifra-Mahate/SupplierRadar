@@ -4,7 +4,9 @@ from flask_cors import CORS
 import random
 import pickle
 import os
-
+from news_api import get_supplier_risk_score
+from weather_api import get_weather_risk_score
+from sanctions_api import check_sanctions
 model_path = os.path.join('ml', 'supplier_risk_model.pkl')
 try:
     with open(model_path, 'rb') as f:
@@ -476,6 +478,67 @@ def predict():
         "news_risk_score": data.get('news_risk_score'),
         "weather_risk_score": data.get('weather_risk_score'),
         "sanctions_flag": data.get('sanctions_flag')
+    })
+@app.route('/api/live-risk/<int:id>')
+def get_live_risk(id):
+    supplier = Supplier.query.get(id)
+    if not supplier:
+        return jsonify({
+            "error": "Supplier not found"
+        }), 404
+    
+    try:
+        news_risk = get_supplier_risk_score(
+            supplier.name
+        )
+        news_score = news_risk.get(
+            'risk_percentage', 5
+        )
+    except:
+        news_score = 5
+
+    try:
+        weather_risk = get_weather_risk_score(
+            supplier.city
+        )
+        weather_score = weather_risk.get(
+            'risk_score', 3
+        )
+    except:
+        weather_score = 3
+
+    try:
+        sanctions = check_sanctions(
+            supplier.name
+        )
+        sanctions_flag = sanctions.get(
+            'is_sanctioned', 0
+        )
+    except:
+        sanctions_flag = 0
+
+    final_score = (
+        news_score * 0.5 +
+        weather_score * 10 * 0.3 +
+        sanctions_flag * 100 * 0.2
+    )
+    final_score = round(min(final_score, 100), 1)
+
+    if final_score > 70:
+        risk_level = "High"
+    elif final_score >= 40:
+        risk_level = "Medium"
+    else:
+        risk_level = "Low"
+
+    return jsonify({
+        "supplier_name": supplier.name,
+        "supplier_country": supplier.country,
+        "news_risk_score": round(news_score, 1),
+        "weather_risk_score": weather_score,
+        "sanctions_flag": sanctions_flag,
+        "final_risk_score": final_score,
+        "risk_level": risk_level
     })
 if __name__ == '__main__':
     with app.app_context():
