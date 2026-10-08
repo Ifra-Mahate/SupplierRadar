@@ -1,0 +1,86 @@
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.local
+.env.production
+.env.*.local
+
+# ========================
+# Database
+# ========================
+instance/
+*.db
+*.sqlite3
+
+# ========================
+# ML Model (large binary)
+# ========================
+# Uncomment if you don't want to track the model:
+# ml/*.pkl
+
+# ========================
+# Node / Frontend
+# ========================
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ========================
+# IDE / Editor
+# ========================
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# ========================
+# Project Analysis (generated)
+# ========================
+SupplierRadar_Project_Analysis.txt
+SupplierRadar_Implementation_Prompt.txt
